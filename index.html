@@ -25,6 +25,7 @@
 			this.xSpeed = 1;
 			this.ySpeed = 0;
 			this.speed = 1;
+			this.radius = 10;
 		};
 		
 		Ball.prototype.move = function() {
@@ -37,7 +38,7 @@
 		};
 		
 		Ball.prototype.draw = function() {
-			circle(this.x, this.y, 10, true);
+			circle(this.x, this.y, this.radius, true);
 		};
 	
 		Ball.prototype.setDirection = function(direction) {
@@ -64,6 +65,11 @@
 			if (newSpeed === "speedUp") this.speed += 1;
 		};
 		
+		Ball.prototype.setRadius = function(newRadius) {
+			if (newRadius === "radiusDown" && this.radius > 1) this.radius -= 1;
+			if (newRadius === "radiusUp") this.radius += 1;
+		};
+		
 		var ball = new Ball();
 		
 		var keyActions = {
@@ -79,11 +85,18 @@
 			88: "speedUp"
 		};
 		
+		var radiuses = {
+			67: "radiusDown",
+			86: "radiusUp"
+		};
+		
 		$("body").keydown(function(event) {
 			var direction = keyActions[event.keyCode];
 			var speed = speeds[event.keyCode];
+			var radius = radiuses[event.keyCode];
 			ball.setDirection(direction);
 			ball.setSpeed(speed);
+			ball.setRadius(radius);
 		});
 		
 		setInterval(function() {
