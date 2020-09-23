@@ -60,7 +60,8 @@
 		};
 		
 		Ball.prototype.setSpeed = function(newSpeed) {
-			if (newSpeed !== undefined) this.speed = newSpeed;
+			if (newSpeed === "speedDown" && this.speed > 1) this.speed -= 1;
+			if (newSpeed === "speedUp") this.speed += 1;
 		};
 		
 		var ball = new Ball();
@@ -74,15 +75,8 @@
 		};
 		
 		var speeds = {
-			49: 1,
-			50: 2,
-			51: 3,
-			52: 4,
-			53: 5,
-			54: 6,
-			55: 7,
-			56: 8,
-			57: 9
+			90: "speedDown",
+			88: "speedUp"
 		};
 		
 		$("body").keydown(function(event) {
