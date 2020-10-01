@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Змейка</title>
+	<style>
+		body {
+			background-image: url(./snake_backgraund.jpg);
+			background-position: top;
+			background-size: cover;	
+		}
+		
+		#canvas, #gameInfo {
+			position: absolute;
+			margin: 20px;
+			background-color: white;
+			opacity: 0.7;
+		}
+		
+		
+	</style>
+</head>
+<body>
+	<canvas id="gameInfo" width="400" height="40"></canvas>
+	<canvas id="canvas" width="400" height="400"></canvas>
+	<script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+	<script src="snake.js"></script>
+</body>
+</html>
