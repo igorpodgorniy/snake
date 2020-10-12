@@ -49,7 +49,10 @@ var drawStart = function() {
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
 	ctx.fillText("Начать игру", width / 2, height / 2);
-	
+};
+
+// Пишем надпись с предложением начать (продолжить)
+var drawContinue = function() {
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
 	ctx2.textAlign = "center";
