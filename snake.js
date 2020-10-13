@@ -44,6 +44,7 @@ var drawBorder = function() {
 
 // Рисуем стартовый экран
 var drawStart = function() {
+	continueGame = false;
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
 	ctx.textAlign = "center";
@@ -51,13 +52,26 @@ var drawStart = function() {
 	ctx.fillText("Начать игру", width / 2, height / 2);
 };
 
-// Пишем надпись с предложением начать (продолжить)
+// Пишем надпись с предложением начать
 var drawContinue = function() {
+	continueGame = false;
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
 	ctx2.textAlign = "center";
 	ctx2.textBaseline = "top";
 	ctx2.fillText("Нажмите SPACE, чтобы играть", widthInfo / 2, blockSize);
+};
+
+// Пишем надпись с предложением продолжить
+var drawContinue2 = function() {
+	continueGame = false;
+	ctx.font = "20px Courier";
+	ctx.fillStyle = "Black";
+	ctx.textAlign = "center";
+	ctx.textBaseline = "middle";
+	ctx.fillText("Выбирите направление", width / 2, height / 3);
+	ctx.fillText("для продолжения", width / 2, height / 2);
+	ctx.fillText("и нажмите SPACE", width / 2, 2 * height / 3);
 };
 		
 // Выводим счёт игры в левом верхнем углу
@@ -78,7 +92,7 @@ var drawLevel = function() {
 	ctx2.fillText("Lvl: " + level, widthInfo / 2, blockSize);
 };
 		
-// Выводим количество жижней в правом верхнем углу
+// Выводим количество жизней в правом верхнем углу
 var drawLives = function() {
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
@@ -154,7 +168,7 @@ Snake.prototype.draw = function() {
 };
 
 // Создаём новую голову и добавляем её к началу змейки, чтобы передвинуть змейку в текущем направлении
-Snake.prototype.move = function(){
+Snake.prototype.move = function() {
 	var head = this.segments[0];
 	var newHead;
 	
@@ -166,7 +180,15 @@ Snake.prototype.move = function(){
 	else if (this.direction === "up") newHead = new Block(head.col, head.row - 1);
 	
 	if (this.checkCollission(newHead)) {
-		gameOver();
+		countLives--;
+		lives = lives.replace("/", " ");
+		continueGame = false;
+		if (countLives === 0) gameOver();
+		else {	
+			ctx2.clearRect(0, 0, widthInfo, heightInfo);
+			drawContinue();
+			drawContinue2();
+		}
 		return;
 	}
 	
@@ -174,8 +196,21 @@ Snake.prototype.move = function(){
 	
 	if (newHead.equal(apple.position)) {
 		score++;
-		animationTime -= 5;
-		apple.move(this.segments);
+		if (score !== 5) {
+			animationTime -= 5;
+			apple.move(this.segments);
+		} else {
+			level++;
+			if (level === 3) gameOver();
+			else {
+				score = 0;
+				animationTime = 120;
+				continueGame = false;
+				ctx2.clearRect(0, 0, widthInfo, heightInfo);
+				drawContinue();
+			}
+		}
+			
 	} else this.segments.pop();
 };
 
@@ -239,6 +274,7 @@ var apple = new Apple();
 
 // Задаём флаг продолжения анимации
 var playing = true;
+var continueGame = false;
 
 // Задаём функцию анимации gameLoop и начальное время анимации
 var animationTime = 120;
@@ -253,12 +289,12 @@ var gameLoop = function() {
 	apple.draw();
 	drawBorder();
 	
-	if (playing) setTimeout(gameLoop, animationTime);
+	if (playing && continueGame) setTimeout(gameLoop, animationTime);
 };
 
+// Выводим стартовый экран
 drawStart();
-// Запускаем функцию анимации gameLoop
-gameLoop();
+drawContinue();
 
 // Преобразуем коды клавиш в направления
 var directions = {
@@ -271,5 +307,9 @@ var directions = {
 // Задаём обработчик события keydown (клавиши-стрелки)
 $("body").keydown(function(event) {
 	var newDirection = directions[event.keyCode];
+	if (event.keyCode == 32 && playing) {
+		continueGame = true;
+		gameLoop();
+	}
 	if (newDirection !== undefined) snake.setDirection(newDirection);
 });
