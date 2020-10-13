@@ -214,6 +214,18 @@ Snake.prototype.move = function() {
 	} else this.segments.pop();
 };
 
+// Проверяем, не столкнулась ли змейка с собственным телом
+
+Snake.prototype.checkCollissionFerstLvl = function(head) {
+	var selfCollision = false;
+	
+	for (var i = 0; i < this.segments.length; i++) {
+		if (head.equal(this.segments[i])) selfCollision = true;
+	}
+	
+	return selfCollision;
+};
+
 // Проверяем, не столкнулась ли змейка со стеной или собственным телом
 Snake.prototype.checkCollission = function(head) {
 	var leftCollision = (head.col === 0);
@@ -223,13 +235,9 @@ Snake.prototype.checkCollission = function(head) {
 	
 	var wallCollision = leftCollision || topCollision || rightCollision || bottomCollision;
 	
-	var selfCollision = false;
 	
-	for (var i = 0; i < this.segments.length; i++) {
-		if (head.equal(this.segments[i])) selfCollision = true;
-	}
 	
-	return wallCollision || selfCollision;
+	return wallCollision || this.checkCollissionFerstLvl(head);
 };
 
 // Задаём следующее направление движения змейки на основе нажатой клавиши
@@ -276,8 +284,25 @@ var apple = new Apple();
 var playing = true;
 var continueGame = false;
 
-// Задаём функцию анимации gameLoop и начальное время анимации
+// Задаём начальное время анимации
 var animationTime = 120;
+
+// Задаём функцию анимации уровня
+var levelLoop = function() {
+	ctx.clearRect(0, 0, width, height);
+	ctx2.clearRect(0, 0, widthInfo, heightInfo);
+	drawScore();
+	drawLevel();
+	drawLives();
+	snake.move();
+	snake.draw();
+	apple.draw();
+	drawBorder();
+	
+	if (playing && continueGame) setTimeout(levelLoop, animationTime);
+};
+
+// Задаём функцию анимации gameLoop
 var gameLoop = function() {
 	ctx.clearRect(0, 0, width, height);
 	ctx2.clearRect(0, 0, widthInfo, heightInfo);
@@ -309,7 +334,7 @@ $("body").keydown(function(event) {
 	var newDirection = directions[event.keyCode];
 	if (event.keyCode == 32 && playing) {
 		continueGame = true;
-		gameLoop();
+		levelLoop();
 	}
 	if (newDirection !== undefined) snake.setDirection(newDirection);
 });
