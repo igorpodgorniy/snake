@@ -44,15 +44,17 @@ var drawBorder = function() {
 
 // Рисуем препятсвия для третьего уровня
 var drawThirdLvl = function() {
+	var strip = Math.floor(height / 3) - Math.floor(height / 3) % 10;
+	
 	ctx.fillStyle = "Grey";
 	ctx.fillRect(0, 0, width, blockSize);
 	ctx.fillRect(0, height - blockSize, width, blockSize);
 	
-	ctx.fillRect(0, 0, blockSize, Math.floor(width / 3));
-	ctx.fillRect(0, Math.floor(2 * height / 3), blockSize, Math.floor(width / 3));
+	ctx.fillRect(0, 0, blockSize, strip);
+	ctx.fillRect(0, 2 * strip, blockSize, strip);
 	
-	ctx.fillRect(height - blockSize, 0, blockSize, Math.floor(width / 3));
-	ctx.fillRect(height - blockSize, Math.floor(2 * height / 3), blockSize, Math.floor(width / 3));
+	ctx.fillRect(height - blockSize, 0, blockSize, strip);
+	ctx.fillRect(height - blockSize, 2 * strip, blockSize, strip);
 	
 	ctx.fillRect(width / 4, height / 2, width / 2, blockSize);
 };
@@ -227,7 +229,8 @@ Snake.prototype.move = function() {
 	
 	//if (this.checkCollissionSecondLvl(newHead)) {
 	//if (this.checkCollissionFerstLvl(newHead)) {
-	if (this.checkCollissionFourthLvl(newHead)) {	
+	//if (this.checkCollissionFourthLvl(newHead)) {
+	if (this.checkCollissionThirdLvl(newHead)) {		
 		countLives--;
 		lives = lives.replace("/", " ");
 		continueGame = false;
@@ -263,7 +266,6 @@ Snake.prototype.move = function() {
 };
 
 // Проверяем, не столкнулась ли змейка с собственным телом
-
 Snake.prototype.checkCollissionFerstLvl = function(head) {
 	var selfCollision = false;
 	
@@ -284,6 +286,22 @@ Snake.prototype.checkCollissionSecondLvl = function(head) {
 	var wallCollision = leftCollision || topCollision || rightCollision || bottomCollision;
 	
 	return wallCollision || this.checkCollissionFerstLvl(head);
+};
+
+// Проверяем, не столкнёться ли змейка в препятсвиями третьего уровня
+Snake.prototype.checkCollissionThirdLvl = function(head) {
+	var lineCollision = (head.row === heightInBlocks / 2 && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
+	var topCollision = (head.row === 0);
+	var bottomCollision = (head.row === heightInBlocks - 1);
+	
+	var leftTopCollision = (head.col === 0 && head.row > 0 && head.row < Math.floor(heightInBlocks / 3));
+	var leftBottomCollision = (head.col === 0 && head.row > 2 * Math.floor(heightInBlocks / 3) && head.row < heightInBlocks - 1);
+	var rightTopCollision = (head.col === widthInBlocks - 1 && head.row > 0 && head.row < Math.floor(heightInBlocks / 3));
+	var rightBottomCollision = (head.col === widthInBlocks - 1 && head.row > 2 * Math.floor(heightInBlocks / 3) && head.row < heightInBlocks - 1);
+	
+	var linesCollision = lineCollision || topCollision || bottomCollision || leftTopCollision || leftBottomCollision || rightTopCollision || rightBottomCollision;
+	
+	return linesCollision;
 };
 
 // Проверяем, не столкнулась ли змейка с препятствием четвёртого уровня
@@ -384,10 +402,10 @@ var levelLoopFourth = function() {
 	snake.move();
 	snake.draw();
 	apple.draw();
-	drawBorder();
+	//drawBorder();
 	
-	//drawThirdLvl();
-	drawFourthLvl();
+	drawThirdLvl();
+	//drawFourthLvl();
 	
 	if (playing && continueGame) setTimeout(levelLoopFourth, animationTime);
 };
