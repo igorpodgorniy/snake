@@ -81,6 +81,7 @@ var drawStart = function() {
 // Пишем надпись с предложением начать
 var drawContinue = function() {
 	continueGame = false;
+	ctx2.clearRect(0, 0, widthInfo, heightInfo);
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
 	ctx2.textAlign = "center";
@@ -94,10 +95,10 @@ var drawContinue2 = function() {
 	ctx.font = "20px Courier";
 	ctx.fillStyle = "Black";
 	ctx.textAlign = "center";
-	ctx.textBaseline = "middle";
-	ctx.fillText("Выбирите направление", width / 2, height / 3);
-	ctx.fillText("для продолжения", width / 2, height / 2);
-	ctx.fillText("и нажмите SPACE", width / 2, 2 * height / 3);
+	ctx.textBaseline = "top";
+	ctx.fillText("Выбирите направление", width / 2, height / 4.5);
+	ctx.fillText("для продолжения", width / 2, height / 2.5);
+	ctx.fillText("и нажмите SPACE", width / 2, 2 * height / 3.5);
 };
 		
 // Выводим счёт игры в левом верхнем углу
@@ -130,7 +131,6 @@ var drawLives = function() {
 // Отменяем действие setInterval и печатаем сообщение "Конец игры"
 var gameOver = function() {
 	playing = false;
-	ctx.clearRect(0, 0, width, height);
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
 	ctx.textAlign = "center";
@@ -141,7 +141,6 @@ var gameOver = function() {
 // Отменяем действие setInterval и печатаем сообщение "ПОБЕДА!"
 var win = function() {
 	playing = false;
-	ctx.clearRect(0, 0, width, height);
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
 	ctx.textAlign = "center";
@@ -240,9 +239,7 @@ Snake.prototype.move = function() {
 		lives = lives.replace("/", " ");
 		continueGame = false;
 		if (countLives === 0) gameOver();
-		else {	
-			ctx.clearRect(0, 0, width, height);
-			ctx2.clearRect(0, 0, widthInfo, heightInfo);
+		else {
 			drawContinue();
 			drawContinue2();
 		}
@@ -261,10 +258,9 @@ Snake.prototype.move = function() {
 			if (level === 5) win();
 			else {
 				score = 0;
-				animationTime = 120;
+				animationTime = 110;
 				continueGame = false;
-				ctx.clearRect(0, 0, width, height);
-				ctx2.clearRect(0, 0, widthInfo, heightInfo);
+				setTimeout(pause, 1000);
 				drawContinue();
 			}
 		}
@@ -321,7 +317,6 @@ Snake.prototype.checkCollissionFourthLvl = function(head) {
 	return this.checkCollissionSecondLvl(head) || wCollision;
 };
 
-
 // Задаём следующее направление движения змейки на основе нажатой клавиши
 Snake.prototype.setDirection = function(newDirection) {
 	if (this.direction === "up" && newDirection === "down") return;
@@ -334,7 +329,8 @@ Snake.prototype.setDirection = function(newDirection) {
 
 // Задаём конструктор Apple (яблоко)
 var Apple = function() {
-	this.position = new Block(35, 35);
+	//this.position = new Block(35, 35);
+	this.move(snake.segments);
 };
 
 // Рисуем кружок в позиции яблока
@@ -358,6 +354,11 @@ Apple.prototype.move = function(occupiedBlocks) {
 	}
 };
 
+var pause = function() {
+	snake = new Snake();
+	apple = new Apple();
+};
+
 // Создаём объект-змейку и объект-яблоко
 var snake = new Snake();
 var apple = new Apple();
@@ -367,7 +368,7 @@ var playing = true;
 var continueGame = false;
 
 // Задаём начальное время анимации
-var animationTime = 120;
+var animationTime = 110;
 
 // Задаём функцию анимации уровней
 var gameLoop = function() {
@@ -380,9 +381,9 @@ var gameLoop = function() {
 	snake.draw();
 	apple.draw();
 	
-	if (level === 2) drawBorder(); // второй уровень
-	else if (level === 3) drawThirdLvl(); // третий уровень
-	else if (level === 4) {
+	if (level === 2 && continueGame) drawBorder(); // второй уровень
+	else if (level === 3 && continueGame) drawThirdLvl(); // третий уровень
+	else if (level === 4 && continueGame) {
 		drawBorder();
 		drawFourthLvl(); // четвёртый уровень
 	}
@@ -404,11 +405,10 @@ var directions = {
 
 // Задаём обработчик события keydown (клавиши-стрелки)
 $("body").keydown(function(event) {
-	var newDirection = directions[event.keyCode];
 	if (event.keyCode == 32 && playing) {
 		continueGame = true;
-		console.log(level);
 		gameLoop(level);
 	}
+	var newDirection = directions[event.keyCode];
 	if (newDirection !== undefined) snake.setDirection(newDirection);
 });
