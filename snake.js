@@ -130,6 +130,7 @@ var drawLives = function() {
 // Отменяем действие setInterval и печатаем сообщение "Конец игры"
 var gameOver = function() {
 	playing = false;
+	ctx.clearRect(0, 0, width, height);
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
 	ctx.textAlign = "center";
@@ -140,6 +141,7 @@ var gameOver = function() {
 // Отменяем действие setInterval и печатаем сообщение "ПОБЕДА!"
 var win = function() {
 	playing = false;
+	ctx.clearRect(0, 0, width, height);
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
 	ctx.textAlign = "center";
@@ -227,15 +229,19 @@ Snake.prototype.move = function() {
 		else newHead = new Block(head.col, head.row - 1);
 	}
 	
-	//if (this.checkCollissionSecondLvl(newHead)) {
-	//if (this.checkCollissionFerstLvl(newHead)) {
-	//if (this.checkCollissionFourthLvl(newHead)) {
-	if (this.checkCollissionThirdLvl(newHead)) {		
+	var collisionLevel;
+	if (level === 1) collisionLevel = this.checkCollissionFerstLvl(newHead);
+	else if (level === 2) collisionLevel = this.checkCollissionSecondLvl(newHead);
+	else if (level === 3) collisionLevel = this.checkCollissionThirdLvl(newHead);
+	else collisionLevel = this.checkCollissionFourthLvl(newHead);
+
+	if (collisionLevel) {		
 		countLives--;
 		lives = lives.replace("/", " ");
 		continueGame = false;
 		if (countLives === 0) gameOver();
 		else {	
+			ctx.clearRect(0, 0, width, height);
 			ctx2.clearRect(0, 0, widthInfo, heightInfo);
 			drawContinue();
 			drawContinue2();
@@ -252,11 +258,12 @@ Snake.prototype.move = function() {
 			apple.move(this.segments);
 		} else {
 			level++;
-			if (level === 3) win();
+			if (level === 5) win();
 			else {
 				score = 0;
 				animationTime = 120;
 				continueGame = false;
+				ctx.clearRect(0, 0, width, height);
 				ctx2.clearRect(0, 0, widthInfo, heightInfo);
 				drawContinue();
 			}
@@ -362,8 +369,8 @@ var continueGame = false;
 // Задаём начальное время анимации
 var animationTime = 120;
 
-// Задаём функцию анимации первого уровня
-var levelLoopFirst = function() {
+// Задаём функцию анимации уровней
+var gameLoop = function() {
 	ctx.clearRect(0, 0, width, height);
 	ctx2.clearRect(0, 0, widthInfo, heightInfo);
 	drawScore();
@@ -372,42 +379,15 @@ var levelLoopFirst = function() {
 	snake.move();
 	snake.draw();
 	apple.draw();
-	//drawBorder();
 	
-	if (playing && continueGame) setTimeout(levelLoopFirst, animationTime);
-};
-
-// Задаём функцию анимации второго уровня
-var LevelLoopSecond = function() {
-	ctx.clearRect(0, 0, width, height);
-	ctx2.clearRect(0, 0, widthInfo, heightInfo);
-	drawScore();
-	drawLevel();
-	drawLives();
-	snake.move();
-	snake.draw();
-	apple.draw();
-	drawBorder();
+	if (level === 2) drawBorder(); // второй уровень
+	else if (level === 3) drawThirdLvl(); // третий уровень
+	else if (level === 4) {
+		drawBorder();
+		drawFourthLvl(); // четвёртый уровень
+	}
 	
-	if (playing && continueGame) setTimeout(LevelLoopSecond, animationTime);
-};
-
-// Задаём функцию анимации для четвёртого уровня
-var levelLoopFourth = function() {
-	ctx.clearRect(0, 0, width, height);
-	ctx2.clearRect(0, 0, widthInfo, heightInfo);
-	drawScore();
-	drawLevel();
-	drawLives();
-	snake.move();
-	snake.draw();
-	apple.draw();
-	//drawBorder();
-	
-	drawThirdLvl();
-	//drawFourthLvl();
-	
-	if (playing && continueGame) setTimeout(levelLoopFourth, animationTime);
+	if (playing && continueGame) setTimeout(gameLoop, animationTime);
 };
 
 // Выводим стартовый экран
@@ -427,7 +407,8 @@ $("body").keydown(function(event) {
 	var newDirection = directions[event.keyCode];
 	if (event.keyCode == 32 && playing) {
 		continueGame = true;
-		levelLoopFourth();
+		console.log(level);
+		gameLoop(level);
 	}
 	if (newDirection !== undefined) snake.setDirection(newDirection);
 });
