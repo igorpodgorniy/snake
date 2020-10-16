@@ -68,6 +68,15 @@ var drawFourthLvl = function() {
 	ctx.fillRect(width / 4, 2 * strip, width / 2, blockSize);
 };
 
+// Рисуем препятсвия уровней в gameLoop и при столкновениях
+var drawLevelBarrier = function() {
+	if (level === 2) drawBorder(); // второй уровень
+	else if (level === 3) drawThirdLvl(); // третий уровень
+	else if (level === 4) {
+		drawBorder();
+		drawFourthLvl(); // четвёртый уровень
+	}
+}
 // Рисуем стартовый экран
 var drawStart = function() {
 	continueGame = false;
@@ -100,6 +109,18 @@ var drawContinue2 = function() {
 	ctx.fillText("для продолжения", width / 2, height / 2.5);
 	ctx.fillText("и нажмите SPACE", width / 2, 2 * height / 3.5);
 };
+
+// Пишем надпись о переходе на следующий уровень
+var drawLevelUp = function() {
+	continueGame = false;
+	ctx.font = "20px Courier";
+	ctx.fillStyle = "Black";
+	ctx.textAlign = "center";
+	ctx.textBaseline = "top";
+	ctx.fillText("Вы прошли", width / 2, height / 4.5);
+	ctx.fillText("на", width / 2, height / 2.5);
+	ctx.fillText("уровень № " + level, width / 2, 2 * height / 3.5);
+}
 		
 // Выводим счёт игры в левом верхнем углу
 var drawScore = function() {
@@ -242,6 +263,7 @@ Snake.prototype.move = function() {
 		else {
 			drawContinue();
 			drawContinue2();
+			drawLevelBarrier();
 		}
 		return;
 	}
@@ -262,6 +284,7 @@ Snake.prototype.move = function() {
 				continueGame = false;
 				setTimeout(pause, 1000);
 				drawContinue();
+				drawLevelUp();
 			}
 		}
 			
@@ -344,6 +367,8 @@ Apple.prototype.move = function(occupiedBlocks) {
 	var randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 1;
 	this.position = new Block(randomCol, randomRow);
 	
+	// x.concat(y);
+	
 	var index = occupiedBlocks.length - 1;
 	while (index >= 0) {
 		if (this.position.equal(occupiedBlocks[index])) {
@@ -354,6 +379,7 @@ Apple.prototype.move = function(occupiedBlocks) {
 	}
 };
 
+// Функция создания новых змейки и яблока при переходе на следующий уровень
 var pause = function() {
 	snake = new Snake();
 	apple = new Apple();
@@ -381,14 +407,11 @@ var gameLoop = function() {
 	snake.draw();
 	apple.draw();
 	
-	if (level === 2 && continueGame) drawBorder(); // второй уровень
-	else if (level === 3 && continueGame) drawThirdLvl(); // третий уровень
-	else if (level === 4 && continueGame) {
-		drawBorder();
-		drawFourthLvl(); // четвёртый уровень
+	if (continueGame) {
+		drawLevelBarrier();
+		if (playing) setTimeout(gameLoop, animationTime);
 	}
 	
-	if (playing && continueGame) setTimeout(gameLoop, animationTime);
 };
 
 // Выводим стартовый экран
