@@ -69,7 +69,7 @@ var drawFourthLvl = function() {
 };
 
 // Рисуем препятсвия уровней в gameLoop и при столкновениях
-var drawLevelBarrier = function() {
+var drawLevelBarrier = function(level) {
 	if (level === 2) drawBorder(); // второй уровень
 	else if (level === 3) drawThirdLvl(); // третий уровень
 	else if (level === 4) {
@@ -77,6 +77,7 @@ var drawLevelBarrier = function() {
 		drawFourthLvl(); // четвёртый уровень
 	}
 }
+
 // Рисуем стартовый экран
 var drawStart = function() {
 	continueGame = false;
@@ -89,7 +90,6 @@ var drawStart = function() {
 
 // Пишем надпись с предложением начать
 var drawContinue = function() {
-	continueGame = false;
 	ctx2.clearRect(0, 0, widthInfo, heightInfo);
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
@@ -100,7 +100,6 @@ var drawContinue = function() {
 
 // Пишем надпись с предложением продолжить
 var drawContinue2 = function() {
-	continueGame = false;
 	ctx.font = "20px Courier";
 	ctx.fillStyle = "Black";
 	ctx.textAlign = "center";
@@ -233,19 +232,19 @@ Snake.prototype.move = function() {
 	this.direction = this.nextDirection;
 	
 	if (this.direction === "right") {
-		if (head.col + 1 == 41) newHead = new Block(0, head.row);
+		if (head.col + 1 === 41) newHead = new Block(0, head.row);
 		else newHead = new Block(head.col + 1, head.row);
 	}
 	else if (this.direction === "down") {
-		if (head.row + 1 == 41) newHead = new Block(head.col, 0);
+		if (head.row + 1 === 41) newHead = new Block(head.col, 0);
 		else newHead = new Block(head.col, head.row + 1);
 	}
 	else if (this.direction === "left") {
-		if (head.col - 1 == -1) newHead = new Block(40, head.row);
+		if (head.col - 1 === -1) newHead = new Block(40, head.row);
 		else newHead = new Block(head.col - 1, head.row);
 	}
 	else if (this.direction === "up") {
-		if (head.row - 1 == -1) newHead = new Block(head.col, 40);
+		if (head.row - 1 === -1) newHead = new Block(head.col, 40);
 		else newHead = new Block(head.col, head.row - 1);
 	}
 	
@@ -263,8 +262,8 @@ Snake.prototype.move = function() {
 		else {
 			drawContinue();
 			drawContinue2();
-			drawLevelBarrier();
-		}
+			drawLevelBarrier(level);
+		};
 		return;
 	}
 	
@@ -284,6 +283,7 @@ Snake.prototype.move = function() {
 				continueGame = false;
 				setTimeout(pause, 1000);
 				drawContinue();
+				drawLevelBarrier(level - 1);
 				drawLevelUp();
 			}
 		}
@@ -352,7 +352,6 @@ Snake.prototype.setDirection = function(newDirection) {
 
 // Задаём конструктор Apple (яблоко)
 var Apple = function() {
-	//this.position = new Block(35, 35);
 	this.move(snake.segments);
 };
 
@@ -408,7 +407,7 @@ var gameLoop = function() {
 	apple.draw();
 	
 	if (continueGame) {
-		drawLevelBarrier();
+		drawLevelBarrier(level);
 		if (playing) setTimeout(gameLoop, animationTime);
 	}
 	
@@ -426,12 +425,17 @@ var directions = {
 	40: "down"
 };
 
+var esc = false;
 // Задаём обработчик события keydown (клавиши-стрелки)
 $("body").keydown(function(event) {
-	if (event.keyCode == 32 && playing) {
+	if (event.keyCode === 32 && playing) {
 		continueGame = true;
-		gameLoop(level);
+		esc = false;
+		gameLoop();
+	} else if (event.keyCode === 27) {
+		continueGame = false;
+		esc = true;
 	}
 	var newDirection = directions[event.keyCode];
-	if (newDirection !== undefined) snake.setDirection(newDirection);
+	if (newDirection !== undefined && !esc) snake.setDirection(newDirection);
 });
