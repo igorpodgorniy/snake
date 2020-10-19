@@ -32,7 +32,9 @@ var level = 1;
 // Устанавливаем количество жизней "///" и счётчик жизней
 var lives = "///";
 var countLives = 3;
-		
+
+// Расчёты препятсвия для уровней 3 и 4
+var strip = Math.floor(height / 3) - Math.floor(height / 3) % 10;
 // Рисуем препятсвие рамка (второй уровень и часть третьего)
 var drawBorder = function() {
 	ctx.fillStyle = "Grey";
@@ -42,10 +44,26 @@ var drawBorder = function() {
 	ctx.fillRect(width - blockSize, 0, blockSize, height);
 };
 
+// Функция создания массива занятых препятствиями ячеек в зависимости от уровня
+var occupied = function() {
+	var occupiedLevelBlocks = [];
+	var occupiedLevelFourthBlocks = [];
+	var longitude = 2 * width / 4 / blockSize;
+	
+	for (var i = 0; i <= longitude; i++) {
+		if (level === 3) occupiedLevelBlocks[i] = new Block(longitude / 2 + i, height / 2 / blockSize); // препятствие по середине
+		else if (level === 4) {
+			occupiedLevelBlocks[i] = new Block(longitude / 2 + i, strip / blockSize); // препятствие сверху в уровне 4
+			occupiedLevelFourthBlocks[i] = new Block(longitude / 2 + i, 2 * strip / blockSize); // препятсвие снизу в уровне 4
+		}
+	}
+	occupiedLevelBlocks = occupiedLevelBlocks.concat(occupiedLevelFourthBlocks);
+	
+	return occupiedLevelBlocks;
+};
+
 // Рисуем препятсвия для третьего уровня
 var drawThirdLvl = function() {
-	var strip = Math.floor(height / 3) - Math.floor(height / 3) % 10;
-	
 	ctx.fillStyle = "Grey";
 	ctx.fillRect(0, 0, width, blockSize);
 	ctx.fillRect(0, height - blockSize, width, blockSize);
@@ -61,8 +79,6 @@ var drawThirdLvl = function() {
 
 // Рисуем препятсвия для четвёртого уровня
 var drawFourthLvl = function() {
-	var strip = Math.floor(height / 3) - Math.floor(height / 3) % 10;
-	
 	ctx.fillStyle = "Grey";
 	ctx.fillRect(width / 4, strip, width / 2, blockSize);
 	ctx.fillRect(width / 4, 2 * strip, width / 2, blockSize);
@@ -281,7 +297,7 @@ Snake.prototype.move = function() {
 				score = 0;
 				animationTime = 110;
 				continueGame = false;
-				setTimeout(pause, 1000);
+				setTimeout(pause);
 				drawContinue();
 				drawLevelBarrier(level - 1);
 				drawLevelUp();
@@ -366,7 +382,7 @@ Apple.prototype.move = function(occupiedBlocks) {
 	var randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 1;
 	this.position = new Block(randomCol, randomRow);
 	
-	// x.concat(y);
+	occupiedBlocks = occupied().concat(occupiedBlocks);
 	
 	var index = occupiedBlocks.length - 1;
 	while (index >= 0) {
@@ -388,9 +404,10 @@ var pause = function() {
 var snake = new Snake();
 var apple = new Apple();
 
-// Задаём флаг продолжения анимации
-var playing = true;
+// Задаём флаги продолжения анимации, поставноки на паузу и окончания игры
 var continueGame = false;
+var esc = false;
+var playing = true;
 
 // Задаём начальное время анимации
 var animationTime = 110;
@@ -410,7 +427,6 @@ var gameLoop = function() {
 		drawLevelBarrier(level);
 		if (playing) setTimeout(gameLoop, animationTime);
 	}
-	
 };
 
 // Выводим стартовый экран
@@ -425,7 +441,6 @@ var directions = {
 	40: "down"
 };
 
-var esc = false;
 // Задаём обработчик события keydown (клавиши-стрелки)
 $("body").keydown(function(event) {
 	if (event.keyCode === 32 && playing) {
