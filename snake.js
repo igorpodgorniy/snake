@@ -6,12 +6,12 @@ let gameInfo = document.getElementById("gameInfo");
 let ctx2 = gameInfo.getContext("2d");
 		
 // Получаем ширину и высоту элемента canvas
-let width = canvas.width;
-let height = canvas.height;
+const width = canvas.width;
+const height = canvas.height;
 
 // Получаем ширину и высоту элемента gameInfo
-let widthInfo = gameInfo.width;
-let heightInfo = gameInfo.height;
+const widthInfo = gameInfo.width;
+const heightInfo = gameInfo.height;
 		
 // Помещаем холст в нужное место
 canvas.style.setProperty('left', (window.innerWidth - width) / 4 + 'px');
@@ -21,9 +21,9 @@ gameInfo.style.setProperty('left', (window.innerWidth - widthInfo) / 4 + 'px');
 gameInfo.style.setProperty('top', (window.innerHeight - heightInfo) / 4.5 + 'px');
 		
 // Вычисляем ширину и высоту ячейки
-let blockSize = 10;
-let widthInBlocks = width / blockSize;
-let heightInBlocks = height / blockSize;
+const blockSize = 10;
+const widthInBlocks = width / blockSize;
+const heightInBlocks = height / blockSize;
 		
 // Устанавливаем счёт 0 и номер уровня 1
 let score = 0;
@@ -34,7 +34,7 @@ let lives = "///";
 let countLives = 3;
 
 // Расчёты препятсвия для уровней 3 и 4
-let strip = Math.floor(height / 3) - Math.floor(height / 3) % 10;
+const strip = Math.floor(height / 3) - Math.floor(height / 3) % 10;
 
 // Рисуем препятсвие рамка (второй уровень и часть третьего)
 let drawBorder = function() {
@@ -223,9 +223,12 @@ Block.prototype.equal = function (otherBlock) {
 // Задаём конструктор Snake (змейка)
 let Snake = function() {
 	this.segments = [
+		new Block(9, 18),
+		new Block(8, 18),
 		new Block(7, 18),
 		new Block(6, 18),
-		new Block(5, 18)
+		new Block(5, 18),
+		new Block(4, 18)
 	];
 	
 	this.direction = "right";
@@ -411,7 +414,7 @@ let esc = false;
 let playing = true;
 
 // Задаём начальное время анимации
-let time = 110;
+const time = 110;
 let animationTime = time;
 
 
@@ -437,7 +440,7 @@ drawStart();
 drawContinue();
 
 // Преобразуем коды клавиш в направления
-let directions = {
+const directions = {
 	37: "left",
 	38: "up",
 	39: "right",
