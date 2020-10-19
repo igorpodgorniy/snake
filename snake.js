@@ -1,17 +1,17 @@
 // Настройка холстов с прогрессом и игрой
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
 
-var gameInfo = document.getElementById("gameInfo");
-var ctx2 = gameInfo.getContext("2d");
+let gameInfo = document.getElementById("gameInfo");
+let ctx2 = gameInfo.getContext("2d");
 		
 // Получаем ширину и высоту элемента canvas
-var width = canvas.width;
-var height = canvas.height;
+let width = canvas.width;
+let height = canvas.height;
 
 // Получаем ширину и высоту элемента gameInfo
-var widthInfo = gameInfo.width;
-var heightInfo = gameInfo.height;
+let widthInfo = gameInfo.width;
+let heightInfo = gameInfo.height;
 		
 // Помещаем холст в нужное место
 canvas.style.setProperty('left', (window.innerWidth - width) / 4 + 'px');
@@ -21,22 +21,23 @@ gameInfo.style.setProperty('left', (window.innerWidth - widthInfo) / 4 + 'px');
 gameInfo.style.setProperty('top', (window.innerHeight - heightInfo) / 4.5 + 'px');
 		
 // Вычисляем ширину и высоту ячейки
-var blockSize = 10;
-var widthInBlocks = width / blockSize;
-var heightInBlocks = height / blockSize;
+let blockSize = 10;
+let widthInBlocks = width / blockSize;
+let heightInBlocks = height / blockSize;
 		
 // Устанавливаем счёт 0 и номер уровня 1
-var score = 0;
-var level = 1;
+let score = 0;
+let level = 1;
 
 // Устанавливаем количество жизней "///" и счётчик жизней
-var lives = "///";
-var countLives = 3;
+let lives = "///";
+let countLives = 3;
 
 // Расчёты препятсвия для уровней 3 и 4
-var strip = Math.floor(height / 3) - Math.floor(height / 3) % 10;
+let strip = Math.floor(height / 3) - Math.floor(height / 3) % 10;
+
 // Рисуем препятсвие рамка (второй уровень и часть третьего)
-var drawBorder = function() {
+let drawBorder = function() {
 	ctx.fillStyle = "Grey";
 	ctx.fillRect(0, 0, width, blockSize);
 	ctx.fillRect(0, height - blockSize, width, blockSize);
@@ -45,12 +46,12 @@ var drawBorder = function() {
 };
 
 // Функция создания массива занятых препятствиями ячеек в зависимости от уровня
-var occupied = function() {
-	var occupiedLevelBlocks = [];
-	var occupiedLevelFourthBlocks = [];
-	var longitude = 2 * width / 4 / blockSize;
+let occupied = function() {
+	let occupiedLevelBlocks = [];
+	let occupiedLevelFourthBlocks = [];
+	let longitude = 2 * width / 4 / blockSize;
 	
-	for (var i = 0; i <= longitude; i++) {
+	for (let i = 0; i <= longitude; i++) {
 		if (level === 3) occupiedLevelBlocks[i] = new Block(longitude / 2 + i, height / 2 / blockSize); // препятствие по середине
 		else if (level === 4) {
 			occupiedLevelBlocks[i] = new Block(longitude / 2 + i, strip / blockSize); // препятствие сверху в уровне 4
@@ -63,7 +64,7 @@ var occupied = function() {
 };
 
 // Рисуем препятсвия для третьего уровня
-var drawThirdLvl = function() {
+let drawThirdLvl = function() {
 	ctx.fillStyle = "Grey";
 	ctx.fillRect(0, 0, width, blockSize);
 	ctx.fillRect(0, height - blockSize, width, blockSize);
@@ -78,14 +79,14 @@ var drawThirdLvl = function() {
 };
 
 // Рисуем препятсвия для четвёртого уровня
-var drawFourthLvl = function() {
+let drawFourthLvl = function() {
 	ctx.fillStyle = "Grey";
 	ctx.fillRect(width / 4, strip, width / 2, blockSize);
 	ctx.fillRect(width / 4, 2 * strip, width / 2, blockSize);
 };
 
 // Рисуем препятсвия уровней в gameLoop и при столкновениях
-var drawLevelBarrier = function(level) {
+let drawLevelBarrier = function(level) {
 	if (level === 2) drawBorder(); // второй уровень
 	else if (level === 3) drawThirdLvl(); // третий уровень
 	else if (level === 4) {
@@ -95,7 +96,7 @@ var drawLevelBarrier = function(level) {
 }
 
 // Рисуем стартовый экран
-var drawStart = function() {
+let drawStart = function() {
 	continueGame = false;
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
@@ -105,7 +106,7 @@ var drawStart = function() {
 };
 
 // Пишем надпись с предложением начать
-var drawContinue = function() {
+let drawContinue = function() {
 	ctx2.clearRect(0, 0, widthInfo, heightInfo);
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
@@ -115,7 +116,7 @@ var drawContinue = function() {
 };
 
 // Пишем надпись с предложением продолжить
-var drawContinue2 = function() {
+let drawContinue2 = function() {
 	ctx.font = "20px Courier";
 	ctx.fillStyle = "Black";
 	ctx.textAlign = "center";
@@ -126,7 +127,7 @@ var drawContinue2 = function() {
 };
 
 // Пишем надпись о переходе на следующий уровень
-var drawLevelUp = function() {
+let drawLevelUp = function() {
 	continueGame = false;
 	ctx.font = "20px Courier";
 	ctx.fillStyle = "Black";
@@ -138,7 +139,7 @@ var drawLevelUp = function() {
 }
 		
 // Выводим счёт игры в левом верхнем углу
-var drawScore = function() {
+let drawScore = function() {
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
 	ctx2.textAlign = "left";
@@ -147,7 +148,7 @@ var drawScore = function() {
 };
 		
 // Выводим номер уровня сверху посередине
-var drawLevel = function() {
+let drawLevel = function() {
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
 	ctx2.textAlign = "center";
@@ -156,7 +157,7 @@ var drawLevel = function() {
 };
 		
 // Выводим количество жизней в правом верхнем углу
-var drawLives = function() {
+let drawLives = function() {
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
 	ctx2.textAlign = "right";
@@ -165,7 +166,7 @@ var drawLives = function() {
 };
 
 // Отменяем действие setInterval и печатаем сообщение "Конец игры"
-var gameOver = function() {
+let gameOver = function() {
 	playing = false;
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
@@ -175,7 +176,7 @@ var gameOver = function() {
 };
 
 // Отменяем действие setInterval и печатаем сообщение "ПОБЕДА!"
-var win = function() {
+let win = function() {
 	playing = false;
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
@@ -185,7 +186,7 @@ var win = function() {
 };
 
 // Рисуем окружность
-var circle = function(x, y, radius, fillCircle) {
+let circle = function(x, y, radius, fillCircle) {
 	ctx.beginPath();
 	ctx.arc(x, y, radius, 0, Math.PI * 2, false);
 	if (fillCircle) ctx.fill();
@@ -193,23 +194,23 @@ var circle = function(x, y, radius, fillCircle) {
 };
 
 // Задаём конструктор Block (ячейка)
-var Block = function(col, row) {
+let Block = function(col, row) {
 	this.col = col;
 	this.row = row;
 };
 
 // Рисуем квадрат в позиции ячейки
 Block.prototype.drawSquare = function (color) {
-	var x = this.col * blockSize;
-	var y = this.row * blockSize;
+	let x = this.col * blockSize;
+	let y = this.row * blockSize;
 	ctx.fillStyle = color;
 	ctx.fillRect(x, y, blockSize, blockSize);
 };
 
 // Рисуем круг в позиции ячейки
 Block.prototype.drawCircle = function (color) {
-	var centerX = this.col * blockSize + blockSize / 2;
-	var centerY = this.row * blockSize + blockSize / 2;
+	let centerX = this.col * blockSize + blockSize / 2;
+	let centerY = this.row * blockSize + blockSize / 2;
 	ctx.fillStyle = color;
 	circle(centerX, centerY, blockSize / 2, true);
 };
@@ -220,7 +221,7 @@ Block.prototype.equal = function (otherBlock) {
 };
 
 // Задаём конструктор Snake (змейка)
-var Snake = function() {
+let Snake = function() {
 	this.segments = [
 		new Block(7, 18),
 		new Block(6, 18),
@@ -234,7 +235,7 @@ var Snake = function() {
 // Рисуем квадратик для каждого сегмента тела змейки
 Snake.prototype.draw = function() {
 	this.segments[0].drawSquare("Green");
-	for (var i = 1; i < this.segments.length; i++) {
+	for (let i = 1; i < this.segments.length; i++) {
 		if (i % 2 === 0) this.segments[i].drawSquare("Blue");
 		else this.segments[i].drawSquare("Yellow");
 	}
@@ -242,8 +243,8 @@ Snake.prototype.draw = function() {
 
 // Создаём новую голову и добавляем её к началу змейки, чтобы передвинуть змейку в текущем направлении
 Snake.prototype.move = function() {
-	var head = this.segments[0];
-	var newHead;
+	let head = this.segments[0];
+	let newHead;
 	
 	this.direction = this.nextDirection;
 	
@@ -264,7 +265,7 @@ Snake.prototype.move = function() {
 		else newHead = new Block(head.col, head.row - 1);
 	}
 	
-	var collisionLevel;
+	let collisionLevel;
 	if (level === 1) collisionLevel = this.checkCollissionFerstLvl(newHead);
 	else if (level === 2) collisionLevel = this.checkCollissionSecondLvl(newHead);
 	else if (level === 3) collisionLevel = this.checkCollissionThirdLvl(newHead);
@@ -287,7 +288,7 @@ Snake.prototype.move = function() {
 	
 	if (newHead.equal(apple.position)) {
 		score++;
-		if (score !== 5) {
+		if (score !== 20) {
 			animationTime -= 5;
 			apple.move(this.segments);
 		} else {
@@ -295,7 +296,7 @@ Snake.prototype.move = function() {
 			if (level === 5) win();
 			else {
 				score = 0;
-				animationTime = 110;
+				animationTime = time;
 				continueGame = false;
 				setTimeout(pause);
 				drawContinue();
@@ -309,9 +310,9 @@ Snake.prototype.move = function() {
 
 // Проверяем, не столкнулась ли змейка с собственным телом
 Snake.prototype.checkCollissionFerstLvl = function(head) {
-	var selfCollision = false;
+	let selfCollision = false;
 	
-	for (var i = 0; i < this.segments.length; i++) {
+	for (let i = 0; i < this.segments.length; i++) {
 		if (head.equal(this.segments[i])) selfCollision = true;
 	}
 	
@@ -320,38 +321,38 @@ Snake.prototype.checkCollissionFerstLvl = function(head) {
 
 // Проверяем, не столкнулась ли змейка со стеной или собственным телом
 Snake.prototype.checkCollissionSecondLvl = function(head) {
-	var leftCollision = (head.col === 0);
-	var topCollision = (head.row === 0);
-	var rightCollision = (head.col === widthInBlocks - 1);
-	var bottomCollision = (head.row === heightInBlocks - 1);
+	let leftCollision = (head.col === 0);
+	let topCollision = (head.row === 0);
+	let rightCollision = (head.col === widthInBlocks - 1);
+	let bottomCollision = (head.row === heightInBlocks - 1);
 	
-	var wallCollision = leftCollision || topCollision || rightCollision || bottomCollision;
+	let wallCollision = leftCollision || topCollision || rightCollision || bottomCollision;
 	
 	return wallCollision || this.checkCollissionFerstLvl(head);
 };
 
 // Проверяем, не столкнёться ли змейка в препятсвиями третьего уровня
 Snake.prototype.checkCollissionThirdLvl = function(head) {
-	var lineCollision = (head.row === heightInBlocks / 2 && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
-	var topCollision = (head.row === 0);
-	var bottomCollision = (head.row === heightInBlocks - 1);
+	let lineCollision = (head.row === heightInBlocks / 2 && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
+	let topCollision = (head.row === 0);
+	let bottomCollision = (head.row === heightInBlocks - 1);
 	
-	var leftTopCollision = (head.col === 0 && head.row > 0 && head.row < Math.floor(heightInBlocks / 3));
-	var leftBottomCollision = (head.col === 0 && head.row > 2 * Math.floor(heightInBlocks / 3) && head.row < heightInBlocks - 1);
-	var rightTopCollision = (head.col === widthInBlocks - 1 && head.row > 0 && head.row < Math.floor(heightInBlocks / 3));
-	var rightBottomCollision = (head.col === widthInBlocks - 1 && head.row > 2 * Math.floor(heightInBlocks / 3) && head.row < heightInBlocks - 1);
+	let leftTopCollision = (head.col === 0 && head.row > 0 && head.row < Math.floor(heightInBlocks / 3));
+	let leftBottomCollision = (head.col === 0 && head.row > 2 * Math.floor(heightInBlocks / 3) && head.row < heightInBlocks - 1);
+	let rightTopCollision = (head.col === widthInBlocks - 1 && head.row > 0 && head.row < Math.floor(heightInBlocks / 3));
+	let rightBottomCollision = (head.col === widthInBlocks - 1 && head.row > 2 * Math.floor(heightInBlocks / 3) && head.row < heightInBlocks - 1);
 	
-	var linesCollision = lineCollision || topCollision || bottomCollision || leftTopCollision || leftBottomCollision || rightTopCollision || rightBottomCollision;
+	let linesCollision = lineCollision || topCollision || bottomCollision || leftTopCollision || leftBottomCollision || rightTopCollision || rightBottomCollision;
 	
 	return linesCollision;
 };
 
 // Проверяем, не столкнулась ли змейка с препятствием четвёртого уровня
 Snake.prototype.checkCollissionFourthLvl = function(head) {
-	var tCollision = (head.row === Math.floor(heightInBlocks / 3) && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
-	var bCollision = (head.row === Math.floor(2 * heightInBlocks / 3) && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
+	let tCollision = (head.row === Math.floor(heightInBlocks / 3) && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
+	let bCollision = (head.row === Math.floor(2 * heightInBlocks / 3) && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
 	
-	var wCollision = tCollision || bCollision;
+	let wCollision = tCollision || bCollision;
 	
 	return this.checkCollissionSecondLvl(head) || wCollision;
 };
@@ -367,7 +368,7 @@ Snake.prototype.setDirection = function(newDirection) {
 };
 
 // Задаём конструктор Apple (яблоко)
-var Apple = function() {
+let Apple = function() {
 	this.move(snake.segments);
 };
 
@@ -378,13 +379,13 @@ Apple.prototype.draw = function() {
 
 // Перемещаем яблоко в случайную позицию
 Apple.prototype.move = function(occupiedBlocks) {
-	var randomCol = Math.floor(Math.random() * (widthInBlocks - 2)) + 1;
-	var randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 1;
+	let randomCol = Math.floor(Math.random() * (widthInBlocks - 2)) + 1;
+	let randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 1;
 	this.position = new Block(randomCol, randomRow);
 	
 	occupiedBlocks = occupied().concat(occupiedBlocks);
 	
-	var index = occupiedBlocks.length - 1;
+	let index = occupiedBlocks.length - 1;
 	while (index >= 0) {
 		if (this.position.equal(occupiedBlocks[index])) {
 			this.move(occupiedBlocks);
@@ -395,25 +396,27 @@ Apple.prototype.move = function(occupiedBlocks) {
 };
 
 // Функция создания новых змейки и яблока при переходе на следующий уровень
-var pause = function() {
+let pause = function() {
 	snake = new Snake();
 	apple = new Apple();
 };
 
 // Создаём объект-змейку и объект-яблоко
-var snake = new Snake();
-var apple = new Apple();
+let snake = new Snake();
+let apple = new Apple();
 
 // Задаём флаги продолжения анимации, поставноки на паузу и окончания игры
-var continueGame = false;
-var esc = false;
-var playing = true;
+let continueGame = false;
+let esc = false;
+let playing = true;
 
 // Задаём начальное время анимации
-var animationTime = 110;
+let time = 110;
+let animationTime = time;
+
 
 // Задаём функцию анимации уровней
-var gameLoop = function() {
+let gameLoop = function() {
 	ctx.clearRect(0, 0, width, height);
 	ctx2.clearRect(0, 0, widthInfo, heightInfo);
 	drawScore();
@@ -434,7 +437,7 @@ drawStart();
 drawContinue();
 
 // Преобразуем коды клавиш в направления
-var directions = {
+let directions = {
 	37: "left",
 	38: "up",
 	39: "right",
@@ -451,6 +454,6 @@ $("body").keydown(function(event) {
 		continueGame = false;
 		esc = true;
 	}
-	var newDirection = directions[event.keyCode];
+	let newDirection = directions[event.keyCode];
 	if (newDirection !== undefined && !esc) snake.setDirection(newDirection);
 });
