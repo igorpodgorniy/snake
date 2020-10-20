@@ -49,10 +49,10 @@ let drawBorder = function() {
 let occupied = function() {
 	let occupiedLevelBlocks = [];
 	let occupiedLevelFourthBlocks = [];
-	let longitude = 2 * width / 4 / blockSize;
+	let longitude = 2 * widthInBlocks / 4;
 	
 	for (let i = 0; i <= longitude; i++) {
-		if (level === 3) occupiedLevelBlocks[i] = new Block(longitude / 2 + i, height / 2 / blockSize); // препятствие по середине
+		if (level === 3) occupiedLevelBlocks[i] = new Block(longitude / 2 + i, heightInBlocks / 2); // препятствие по середине
 		else if (level === 4) {
 			occupiedLevelBlocks[i] = new Block(longitude / 2 + i, strip / blockSize); // препятствие сверху в уровне 4
 			occupiedLevelFourthBlocks[i] = new Block(longitude / 2 + i, 2 * strip / blockSize); // препятсвие снизу в уровне 4
@@ -165,14 +165,14 @@ let drawLives = function() {
 	ctx2.fillText("Lives: " + lives, widthInfo - blockSize, blockSize);
 };
 
-// Отменяем действие setInterval и печатаем сообщение "Конец игры"
+// Отменяем действие setInterval и печатаем сообщение "Проиграли!"
 let gameOver = function() {
 	playing = false;
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
-	ctx.fillText("Конец игры", width / 2, height / 2);
+	ctx.fillText("Проиграли!", width / 2, height / 2);
 };
 
 // Отменяем действие setInterval и печатаем сообщение "ПОБЕДА!"
@@ -252,19 +252,19 @@ Snake.prototype.move = function() {
 	this.direction = this.nextDirection;
 	
 	if (this.direction === "right") {
-		if (head.col + 1 === 41) newHead = new Block(0, head.row);
+		if (head.col > widthInBlocks - 2) newHead = new Block(0, head.row);
 		else newHead = new Block(head.col + 1, head.row);
 	}
 	else if (this.direction === "down") {
-		if (head.row + 1 === 41) newHead = new Block(head.col, 0);
+		if (head.row > heightInBlocks - 2) newHead = new Block(head.col, 0);
 		else newHead = new Block(head.col, head.row + 1);
 	}
 	else if (this.direction === "left") {
-		if (head.col - 1 === -1) newHead = new Block(40, head.row);
+		if (head.col - 1 < 0) newHead = new Block(widthInBlocks - 1, head.row);
 		else newHead = new Block(head.col - 1, head.row);
 	}
 	else if (this.direction === "up") {
-		if (head.row - 1 === -1) newHead = new Block(head.col, 40);
+		if (head.row - 1 < 0) newHead = new Block(head.col, heightInBlocks - 1);
 		else newHead = new Block(head.col, head.row - 1);
 	}
 	
@@ -301,7 +301,7 @@ Snake.prototype.move = function() {
 				score = 0;
 				animationTime = time;
 				continueGame = false;
-				setTimeout(pause);
+				setTimeout(newSnakeApple);
 				drawContinue();
 				drawLevelBarrier(level - 1);
 				drawLevelUp();
@@ -399,7 +399,7 @@ Apple.prototype.move = function(occupiedBlocks) {
 };
 
 // Функция создания новых змейки и яблока при переходе на следующий уровень
-let pause = function() {
+let newSnakeApple = function() {
 	snake = new Snake();
 	apple = new Apple();
 };
