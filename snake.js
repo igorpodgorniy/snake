@@ -17,8 +17,8 @@ const heightInfo = gameInfo.height;
 canvas.style.setProperty('left', (window.innerWidth - width) / 4 + 'px');
 canvas.style.setProperty('top', (window.innerHeight - height) / 2 + 'px');
 
-gameInfo.style.setProperty('left', (window.innerWidth - widthInfo) / 4 + 'px');
-gameInfo.style.setProperty('top', (window.innerHeight - heightInfo) / 4.5 + 'px');
+gameInfo.style.setProperty('left', (window.innerWidth - width) / 4 + 'px');
+gameInfo.style.setProperty('top', (window.innerHeight - height) / 2 - 50 + 'px');
 		
 // Вычисляем ширину и высоту ячейки
 const blockSize = 10;
