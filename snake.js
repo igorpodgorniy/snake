@@ -1,3 +1,4 @@
+'use strict';
 // Настройка холстов с прогрессом и игрой
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
@@ -37,7 +38,7 @@ let countLives = 3;
 const strip = Math.floor(height / 3) - Math.floor(height / 3) % 10;
 
 // Рисуем препятсвие рамка (второй уровень и часть третьего)
-let drawBorder = function() {
+const drawBorder = function() {
 	ctx.fillStyle = "Grey";
 	ctx.fillRect(0, 0, width, blockSize);
 	ctx.fillRect(0, height - blockSize, width, blockSize);
@@ -46,14 +47,15 @@ let drawBorder = function() {
 };
 
 // Функция создания массива занятых препятствиями ячеек в зависимости от уровня
-let occupied = function() {
+const occupied = function() {
 	let occupiedLevelBlocks = [];
 	let occupiedLevelFourthBlocks = [];
 	let longitude = 2 * widthInBlocks / 4;
 	
 	for (let i = 0; i <= longitude; i++) {
-		if (level === 3) occupiedLevelBlocks[i] = new Block(longitude / 2 + i, heightInBlocks / 2); // препятствие по середине
-		else if (level === 4) {
+		if (level === 3) {
+			occupiedLevelBlocks[i] = new Block(longitude / 2 + i, heightInBlocks / 2); // препятствие по середине
+		} else if (level === 4) {
 			occupiedLevelBlocks[i] = new Block(longitude / 2 + i, strip / blockSize); // препятствие сверху в уровне 4
 			occupiedLevelFourthBlocks[i] = new Block(longitude / 2 + i, 2 * strip / blockSize); // препятсвие снизу в уровне 4
 		}
@@ -64,7 +66,7 @@ let occupied = function() {
 };
 
 // Рисуем препятсвия для третьего уровня
-let drawThirdLvl = function() {
+const drawThirdLvl = function() {
 	ctx.fillStyle = "Grey";
 	ctx.fillRect(0, 0, width, blockSize);
 	ctx.fillRect(0, height - blockSize, width, blockSize);
@@ -79,24 +81,26 @@ let drawThirdLvl = function() {
 };
 
 // Рисуем препятсвия для четвёртого уровня
-let drawFourthLvl = function() {
+const drawFourthLvl = function() {
 	ctx.fillStyle = "Grey";
 	ctx.fillRect(width / 4, strip, width / 2, blockSize);
 	ctx.fillRect(width / 4, 2 * strip, width / 2, blockSize);
 };
 
 // Рисуем препятсвия уровней в gameLoop и при столкновениях
-let drawLevelBarrier = function(level) {
-	if (level === 2) drawBorder(); // второй уровень
-	else if (level === 3) drawThirdLvl(); // третий уровень
-	else if (level === 4) {
+const drawLevelBarrier = function(level) {
+	if (level === 2) {
+		drawBorder(); // второй уровень
+	} else if (level === 3) {
+		drawThirdLvl(); // третий уровень
+	} else if (level === 4) {
 		drawBorder();
 		drawFourthLvl(); // четвёртый уровень
 	}
-}
+};
 
 // Рисуем стартовый экран
-let drawStart = function() {
+const drawStart = function() {
 	continueGame = false;
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
@@ -106,7 +110,7 @@ let drawStart = function() {
 };
 
 // Пишем надпись с предложением начать
-let drawContinue = function() {
+const drawContinue = function() {
 	ctx2.clearRect(0, 0, widthInfo, heightInfo);
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
@@ -116,7 +120,7 @@ let drawContinue = function() {
 };
 
 // Пишем надпись с предложением продолжить
-let drawContinue2 = function() {
+const drawContinue2 = function() {
 	ctx.font = "20px Courier";
 	ctx.fillStyle = "Black";
 	ctx.textAlign = "center";
@@ -127,7 +131,7 @@ let drawContinue2 = function() {
 };
 
 // Пишем надпись о переходе на следующий уровень
-let drawLevelUp = function() {
+const drawLevelUp = function() {
 	continueGame = false;
 	ctx.font = "20px Courier";
 	ctx.fillStyle = "Black";
@@ -136,10 +140,10 @@ let drawLevelUp = function() {
 	ctx.fillText("Вы прошли", width / 2, height / 4.5);
 	ctx.fillText("на", width / 2, height / 2.5);
 	ctx.fillText("уровень № " + level, width / 2, 2 * height / 3.5);
-}
+};
 		
 // Выводим счёт игры в левом верхнем углу
-let drawScore = function() {
+const drawScore = function() {
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
 	ctx2.textAlign = "left";
@@ -148,7 +152,7 @@ let drawScore = function() {
 };
 		
 // Выводим номер уровня сверху посередине
-let drawLevel = function() {
+const drawLevel = function() {
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
 	ctx2.textAlign = "center";
@@ -157,7 +161,7 @@ let drawLevel = function() {
 };
 		
 // Выводим количество жизней в правом верхнем углу
-let drawLives = function() {
+const drawLives = function() {
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
 	ctx2.textAlign = "right";
@@ -166,7 +170,7 @@ let drawLives = function() {
 };
 
 // Отменяем действие setInterval и печатаем сообщение "Проиграли!"
-let gameOver = function() {
+const gameOver = function() {
 	playing = false;
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
@@ -176,7 +180,7 @@ let gameOver = function() {
 };
 
 // Отменяем действие setInterval и печатаем сообщение "ПОБЕДА!"
-let win = function() {
+const win = function() {
 	playing = false;
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
@@ -186,15 +190,18 @@ let win = function() {
 };
 
 // Рисуем окружность
-let circle = function(x, y, radius, fillCircle) {
+const circle = function(x, y, radius, fillCircle) {
 	ctx.beginPath();
 	ctx.arc(x, y, radius, 0, Math.PI * 2, false);
-	if (fillCircle) ctx.fill();
-	else ctx.stroke();
+	if (fillCircle) {
+		ctx.fill();
+	} else {
+		ctx.stroke();
+	}
 };
 
 // Задаём конструктор Block (ячейка)
-let Block = function(col, row) {
+const Block = function(col, row) {
 	this.col = col;
 	this.row = row;
 };
@@ -221,7 +228,7 @@ Block.prototype.equal = function (otherBlock) {
 };
 
 // Задаём конструктор Snake (змейка)
-let Snake = function() {
+const Snake = function() {
 	this.segments = [
 		new Block(9, 18),
 		new Block(8, 18),
@@ -239,8 +246,11 @@ let Snake = function() {
 Snake.prototype.draw = function() {
 	this.segments[0].drawSquare("Green");
 	for (let i = 1; i < this.segments.length; i++) {
-		if (i % 2 === 0) this.segments[i].drawSquare("Blue");
-		else this.segments[i].drawSquare("Yellow");
+		if (i % 2 === 0) {
+			this.segments[i].drawSquare("Blue");
+		} else {
+			this.segments[i].drawSquare("Yellow");
+		}
 	}
 };
 
@@ -252,38 +262,54 @@ Snake.prototype.move = function() {
 	this.direction = this.nextDirection;
 	
 	if (this.direction === "right") {
-		if (head.col > widthInBlocks - 2) newHead = new Block(0, head.row);
-		else newHead = new Block(head.col + 1, head.row);
+		if (head.col > widthInBlocks - 2) {
+			newHead = new Block(0, head.row);
+		} else {
+			newHead = new Block(head.col + 1, head.row);
+		}
 	}
 	else if (this.direction === "down") {
-		if (head.row > heightInBlocks - 2) newHead = new Block(head.col, 0);
-		else newHead = new Block(head.col, head.row + 1);
-	}
-	else if (this.direction === "left") {
-		if (head.col - 1 < 0) newHead = new Block(widthInBlocks - 1, head.row);
-		else newHead = new Block(head.col - 1, head.row);
-	}
-	else if (this.direction === "up") {
-		if (head.row - 1 < 0) newHead = new Block(head.col, heightInBlocks - 1);
-		else newHead = new Block(head.col, head.row - 1);
+		if (head.row > heightInBlocks - 2) { 
+			newHead = new Block(head.col, 0);
+		} else {
+			newHead = new Block(head.col, head.row + 1);
+		}
+	} else if (this.direction === "left") {
+		if (head.col - 1 < 0) {
+			newHead = new Block(widthInBlocks - 1, head.row);
+		} else {
+			newHead = new Block(head.col - 1, head.row);
+		}
+	} else if (this.direction === "up") {
+		if (head.row - 1 < 0) {
+			newHead = new Block(head.col, heightInBlocks - 1);
+		} else {
+			newHead = new Block(head.col, head.row - 1);
+		}
 	}
 	
 	let collisionLevel;
-	if (level === 1) collisionLevel = this.checkCollissionFerstLvl(newHead);
-	else if (level === 2) collisionLevel = this.checkCollissionSecondLvl(newHead);
-	else if (level === 3) collisionLevel = this.checkCollissionThirdLvl(newHead);
-	else collisionLevel = this.checkCollissionFourthLvl(newHead);
+	if (level === 1) {
+		collisionLevel = this.checkCollissionFerstLvl(newHead);
+	} else if (level === 2) {
+		collisionLevel = this.checkCollissionSecondLvl(newHead);
+	} else if (level === 3) {
+		collisionLevel = this.checkCollissionThirdLvl(newHead);
+	} else {
+		collisionLevel = this.checkCollissionFourthLvl(newHead);
+	}
 
 	if (collisionLevel) {		
 		countLives--;
 		lives = lives.replace("/", " ");
 		continueGame = false;
-		if (countLives === 0) gameOver();
-		else {
+		if (countLives === 0) {
+			gameOver();
+		} else {
 			drawContinue();
 			drawContinue2();
 			drawLevelBarrier(level);
-		};
+		}
 		return;
 	}
 	
@@ -296,8 +322,9 @@ Snake.prototype.move = function() {
 			apple.move(this.segments);
 		} else {
 			level++;
-			if (level === 5) win();
-			else {
+			if (level === 5) {
+				win();
+			} else {
 				score = 0;
 				animationTime = time;
 				continueGame = false;
@@ -308,7 +335,9 @@ Snake.prototype.move = function() {
 			}
 		}
 			
-	} else this.segments.pop();
+	} else {
+		this.segments.pop();
+	}
 };
 
 // Проверяем, не столкнулась ли змейка с собственным телом
@@ -316,62 +345,67 @@ Snake.prototype.checkCollissionFerstLvl = function(head) {
 	let selfCollision = false;
 	
 	for (let i = 0; i < this.segments.length; i++) {
-		if (head.equal(this.segments[i])) selfCollision = true;
+		if (head.equal(this.segments[i])) {
+			selfCollision = true;
+		}
 	}
-	
 	return selfCollision;
 };
 
 // Проверяем, не столкнулась ли змейка со стеной или собственным телом
 Snake.prototype.checkCollissionSecondLvl = function(head) {
-	let leftCollision = (head.col === 0);
-	let topCollision = (head.row === 0);
-	let rightCollision = (head.col === widthInBlocks - 1);
-	let bottomCollision = (head.row === heightInBlocks - 1);
+	const leftCollision = (head.col === 0);
+	const topCollision = (head.row === 0);
+	const rightCollision = (head.col === widthInBlocks - 1);
+	const bottomCollision = (head.row === heightInBlocks - 1);
 	
-	let wallCollision = leftCollision || topCollision || rightCollision || bottomCollision;
+	const wallCollision = leftCollision || topCollision || rightCollision || bottomCollision;
 	
 	return wallCollision || this.checkCollissionFerstLvl(head);
 };
 
 // Проверяем, не столкнёться ли змейка в препятсвиями третьего уровня
 Snake.prototype.checkCollissionThirdLvl = function(head) {
-	let lineCollision = (head.row === heightInBlocks / 2 && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
-	let topCollision = (head.row === 0);
-	let bottomCollision = (head.row === heightInBlocks - 1);
+	const lineCollision = (head.row === heightInBlocks / 2 && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
+	const topCollision = (head.row === 0);
+	const bottomCollision = (head.row === heightInBlocks - 1);
 	
-	let leftTopCollision = (head.col === 0 && head.row > 0 && head.row < Math.floor(heightInBlocks / 3));
-	let leftBottomCollision = (head.col === 0 && head.row > 2 * Math.floor(heightInBlocks / 3) && head.row < heightInBlocks - 1);
-	let rightTopCollision = (head.col === widthInBlocks - 1 && head.row > 0 && head.row < Math.floor(heightInBlocks / 3));
-	let rightBottomCollision = (head.col === widthInBlocks - 1 && head.row > 2 * Math.floor(heightInBlocks / 3) && head.row < heightInBlocks - 1);
+	const leftTopCollision = (head.col === 0 && head.row > 0 && head.row < Math.floor(heightInBlocks / 3));
+	const leftBottomCollision = (head.col === 0 && head.row > 2 * Math.floor(heightInBlocks / 3) && head.row < heightInBlocks - 1);
+	const rightTopCollision = (head.col === widthInBlocks - 1 && head.row > 0 && head.row < Math.floor(heightInBlocks / 3));
+	const rightBottomCollision = (head.col === widthInBlocks - 1 && head.row > 2 * Math.floor(heightInBlocks / 3) && head.row < heightInBlocks - 1);
 	
-	let linesCollision = lineCollision || topCollision || bottomCollision || leftTopCollision || leftBottomCollision || rightTopCollision || rightBottomCollision;
+	const linesCollision = lineCollision || topCollision || bottomCollision || leftTopCollision || leftBottomCollision || rightTopCollision || rightBottomCollision;
 	
 	return linesCollision;
 };
 
 // Проверяем, не столкнулась ли змейка с препятствием четвёртого уровня
 Snake.prototype.checkCollissionFourthLvl = function(head) {
-	let tCollision = (head.row === Math.floor(heightInBlocks / 3) && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
-	let bCollision = (head.row === Math.floor(2 * heightInBlocks / 3) && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
+	const tCollision = (head.row === Math.floor(heightInBlocks / 3) && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
+	const bCollision = (head.row === Math.floor(2 * heightInBlocks / 3) && head.col < 3 * widthInBlocks / 4 && head.col >= widthInBlocks / 4);
 	
-	let wCollision = tCollision || bCollision;
+	const wCollision = tCollision || bCollision;
 	
 	return this.checkCollissionSecondLvl(head) || wCollision;
 };
 
 // Задаём следующее направление движения змейки на основе нажатой клавиши
 Snake.prototype.setDirection = function(newDirection) {
-	if (this.direction === "up" && newDirection === "down") return;
-	else if (this.direction === "right" && newDirection === "left") return;
-	else if (this.direction === "down" && newDirection === "up") return;
-	else if (this.direction === "left" && newDirection === "right") return;
-	
+	if (this.direction === "up" && newDirection === "down") {
+		return;
+	} else if (this.direction === "right" && newDirection === "left") { 
+		return;
+	} else if (this.direction === "down" && newDirection === "up") {
+		return;
+	} else if (this.direction === "left" && newDirection === "right") {
+		return;
+	}
 	this.nextDirection = newDirection;
 };
 
 // Задаём конструктор Apple (яблоко)
-let Apple = function() {
+const Apple = function() {
 	this.move(snake.segments);
 };
 
@@ -382,8 +416,8 @@ Apple.prototype.draw = function() {
 
 // Перемещаем яблоко в случайную позицию
 Apple.prototype.move = function(occupiedBlocks) {
-	let randomCol = Math.floor(Math.random() * (widthInBlocks - 2)) + 1;
-	let randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 1;
+	const randomCol = Math.floor(Math.random() * (widthInBlocks - 2)) + 1;
+	const randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 1;
 	this.position = new Block(randomCol, randomRow);
 	
 	occupiedBlocks = occupied().concat(occupiedBlocks);
@@ -399,7 +433,7 @@ Apple.prototype.move = function(occupiedBlocks) {
 };
 
 // Функция создания новых змейки и яблока при переходе на следующий уровень
-let newSnakeApple = function() {
+const newSnakeApple = function() {
 	snake = new Snake();
 	apple = new Apple();
 };
@@ -431,7 +465,9 @@ let gameLoop = function() {
 	
 	if (continueGame) {
 		drawLevelBarrier(level);
-		if (playing) setTimeout(gameLoop, animationTime);
+		if (playing) {
+			setTimeout(gameLoop, animationTime);
+		}
 	}
 };
 
@@ -458,5 +494,7 @@ $("body").keydown(function(event) {
 		esc = true;
 	}
 	let newDirection = directions[event.keyCode];
-	if (newDirection !== undefined && !esc) snake.setDirection(newDirection);
+	if (newDirection !== undefined && !esc) {
+		snake.setDirection(newDirection);
+	}
 });
