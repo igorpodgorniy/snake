@@ -5,7 +5,7 @@ let ctx = canvas.getContext("2d");
 
 let gameInfo = document.getElementById("gameInfo");
 let ctx2 = gameInfo.getContext("2d");
-		
+
 // Получаем ширину и высоту элемента canvas
 const width = canvas.width;
 const height = canvas.height;
@@ -13,19 +13,19 @@ const height = canvas.height;
 // Получаем ширину и высоту элемента gameInfo
 const widthInfo = gameInfo.width;
 const heightInfo = gameInfo.height;
-		
+
 // Помещаем холст в нужное место
 canvas.style.setProperty('left', (window.innerWidth - width) / 4 + 'px');
 canvas.style.setProperty('top', (window.innerHeight - height) / 2 + 'px');
 
 gameInfo.style.setProperty('left', (window.innerWidth - width) / 4 + 'px');
 gameInfo.style.setProperty('top', (window.innerHeight - height) / 2 - 50 + 'px');
-		
+
 // Вычисляем ширину и высоту ячейки
 const blockSize = 10;
 const widthInBlocks = width / blockSize;
 const heightInBlocks = height / blockSize;
-		
+
 // Устанавливаем счёт 0 и номер уровня 1
 let score = 0;
 let level = 1;
@@ -38,7 +38,7 @@ let countLives = 3;
 const strip = Math.floor(height / 3) - Math.floor(height / 3) % 10;
 
 // Рисуем препятсвие рамка (второй уровень и часть третьего)
-const drawBorder = function() {
+const drawBorder = () => {
 	ctx.fillStyle = "Grey";
 	ctx.fillRect(0, 0, width, blockSize);
 	ctx.fillRect(0, height - blockSize, width, blockSize);
@@ -47,7 +47,7 @@ const drawBorder = function() {
 };
 
 // Функция создания массива занятых препятствиями ячеек в зависимости от уровня
-const occupied = function() {
+const occupied = () => {
 	let occupiedLevelBlocks = [];
 	let occupiedLevelFourthBlocks = [];
 	let longitude = 2 * widthInBlocks / 4;
@@ -66,7 +66,7 @@ const occupied = function() {
 };
 
 // Рисуем препятсвия для третьего уровня
-const drawThirdLvl = function() {
+const drawThirdLvl = () => {
 	ctx.fillStyle = "Grey";
 	ctx.fillRect(0, 0, width, blockSize);
 	ctx.fillRect(0, height - blockSize, width, blockSize);
@@ -81,14 +81,14 @@ const drawThirdLvl = function() {
 };
 
 // Рисуем препятсвия для четвёртого уровня
-const drawFourthLvl = function() {
+const drawFourthLvl = () => {
 	ctx.fillStyle = "Grey";
 	ctx.fillRect(width / 4, strip, width / 2, blockSize);
 	ctx.fillRect(width / 4, 2 * strip, width / 2, blockSize);
 };
 
 // Рисуем препятсвия уровней в gameLoop и при столкновениях
-const drawLevelBarrier = function(level) {
+const drawLevelBarrier = (level) => {
 	if (level === 2) {
 		drawBorder(); // второй уровень
 	} else if (level === 3) {
@@ -100,7 +100,7 @@ const drawLevelBarrier = function(level) {
 };
 
 // Рисуем стартовый экран
-const drawStart = function() {
+const drawStart = () => {
 	continueGame = false;
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
@@ -110,7 +110,7 @@ const drawStart = function() {
 };
 
 // Пишем надпись с предложением начать
-const drawContinue = function() {
+const drawContinue = () => {
 	ctx2.clearRect(0, 0, widthInfo, heightInfo);
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
@@ -120,7 +120,7 @@ const drawContinue = function() {
 };
 
 // Пишем надпись с предложением продолжить
-const drawContinue2 = function() {
+const drawContinue2 = () => {
 	ctx.font = "20px Courier";
 	ctx.fillStyle = "Black";
 	ctx.textAlign = "center";
@@ -131,7 +131,7 @@ const drawContinue2 = function() {
 };
 
 // Пишем надпись о переходе на следующий уровень
-const drawLevelUp = function() {
+const drawLevelUp = () => {
 	continueGame = false;
 	ctx.font = "20px Courier";
 	ctx.fillStyle = "Black";
@@ -141,27 +141,27 @@ const drawLevelUp = function() {
 	ctx.fillText("на", width / 2, height / 2.5);
 	ctx.fillText("уровень № " + level, width / 2, 2 * height / 3.5);
 };
-		
+
 // Выводим счёт игры в левом верхнем углу
-const drawScore = function() {
+const drawScore = () => {
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
 	ctx2.textAlign = "left";
 	ctx2.textBaseline = "top";
 	ctx2.fillText("Score: " + score, blockSize, blockSize);
 };
-		
+
 // Выводим номер уровня сверху посередине
-const drawLevel = function() {
+const drawLevel = () => {
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
 	ctx2.textAlign = "center";
 	ctx2.textBaseline = "top";
 	ctx2.fillText("Lvl: " + level, widthInfo / 2, blockSize);
 };
-		
+
 // Выводим количество жизней в правом верхнем углу
-const drawLives = function() {
+const drawLives = () => {
 	ctx2.font = "20px Courier";
 	ctx2.fillStyle = "Black";
 	ctx2.textAlign = "right";
@@ -170,7 +170,7 @@ const drawLives = function() {
 };
 
 // Отменяем действие setInterval и печатаем сообщение "Проиграли!"
-const gameOver = function() {
+const gameOver = () => {
 	playing = false;
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
@@ -180,7 +180,7 @@ const gameOver = function() {
 };
 
 // Отменяем действие setInterval и печатаем сообщение "ПОБЕДА!"
-const win = function() {
+const win = () => {
 	playing = false;
 	ctx.font = "60px Courier";
 	ctx.fillStyle = "Black";
@@ -190,7 +190,7 @@ const win = function() {
 };
 
 // Рисуем окружность
-const circle = function(x, y, radius, fillCircle) {
+const circle = (x, y, radius, fillCircle) => {
 	ctx.beginPath();
 	ctx.arc(x, y, radius, 0, Math.PI * 2, false);
 	if (fillCircle) {
@@ -201,10 +201,12 @@ const circle = function(x, y, radius, fillCircle) {
 };
 
 // Задаём конструктор Block (ячейка)
-const Block = function(col, row) {
-	this.col = col;
-	this.row = row;
-};
+class Block {
+	constructor(col, row) {
+		this.col = col;
+		this.row = row;
+	} 
+}
 
 // Рисуем квадрат в позиции ячейки
 Block.prototype.drawSquare = function (color) {
@@ -228,19 +230,21 @@ Block.prototype.equal = function (otherBlock) {
 };
 
 // Задаём конструктор Snake (змейка)
-const Snake = function() {
-	this.segments = [
-		new Block(9, 18),
-		new Block(8, 18),
-		new Block(7, 18),
-		new Block(6, 18),
-		new Block(5, 18),
-		new Block(4, 18)
-	];
-	
-	this.direction = "right";
-	this.nextDirection = "right";
-};
+class Snake {
+	constructor() {
+		this.segments = [
+			new Block(9, 18),
+			new Block(8, 18),
+			new Block(7, 18),
+			new Block(6, 18),
+			new Block(5, 18),
+			new Block(4, 18)
+		];
+		
+		this.direction = "right";
+		this.nextDirection = "right";
+	}
+}
 
 // Рисуем квадратик для каждого сегмента тела змейки
 Snake.prototype.draw = function() {
@@ -406,9 +410,11 @@ Snake.prototype.setDirection = function(newDirection) {
 };
 
 // Задаём конструктор Apple (яблоко)
-const Apple = function() {
-	this.move(snake.segments);
-};
+class Apple {
+	constructor() {
+		this.move(snake.segments);
+	}
+}
 
 // Рисуем кружок в позиции яблока
 Apple.prototype.draw = function() {
@@ -434,7 +440,7 @@ Apple.prototype.move = function(occupiedBlocks) {
 };
 
 // Функция создания новых змейки и яблока при переходе на следующий уровень
-const newSnakeApple = function() {
+const newSnakeApple = () => {
 	snake = new Snake();
 	apple = new Apple();
 };
@@ -454,7 +460,7 @@ let animationTime = time;
 
 
 // Задаём функцию анимации уровней
-let gameLoop = function() {
+let gameLoop = () => {
 	ctx.clearRect(0, 0, width, height);
 	ctx2.clearRect(0, 0, widthInfo, heightInfo);
 	drawScore();
@@ -478,26 +484,24 @@ drawContinue();
 
 // Преобразуем коды клавиш в направления
 const directions = {
-	'ArrowLeft': "left",
-	'ArrowUp': "up",
-	'ArrowRight': "right",
-	'ArrowDown': "down"
+    'ArrowLeft': "left",
+    'ArrowUp': "up",
+    'ArrowRight': "right",
+    'ArrowDown': "down"
 };
 
 // Задаём обработчик события keydown
-const body = document.querySelector('body');
-
-body.addEventListener('keydown', function(event) {
-	if (event.code === "Space" && playing) {
-		continueGame = true;
-		esc = false;
-		gameLoop();
-	} else if (event.code === "Escape") {
-		continueGame = false;
-		esc = true;
-	}
-	let newDirection = directions[event.code];
-	if (newDirection !== undefined && !esc) {
-		snake.setDirection(newDirection);
-	}
+document.querySelector('body').addEventListener('keydown', (event) => {
+    if (event.code === "Space" && playing) {
+        continueGame = true;
+        esc = false;
+        gameLoop();
+    } else if (event.code === "Escape") {
+        continueGame = false;
+        esc = true;
+    }
+    let newDirection = directions[event.code];
+    if (newDirection !== undefined && !esc) {
+        snake.setDirection(newDirection);
+    }
 });
