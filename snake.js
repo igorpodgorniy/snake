@@ -321,7 +321,7 @@ Snake.prototype.move = function() {
 	
 	if (newHead.equal(apple.position)) {
 		score++;
-		if (score !== 3) {
+		if (score !== 20) {
 			animationTime -= 5;
 			apple.move(this.segments);
 		} else {
