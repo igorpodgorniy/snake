@@ -478,23 +478,25 @@ drawContinue();
 
 // Преобразуем коды клавиш в направления
 const directions = {
-	37: "left",
-	38: "up",
-	39: "right",
-	40: "down"
+	'ArrowLeft': "left",
+	'ArrowUp': "up",
+	'ArrowRight': "right",
+	'ArrowDown': "down"
 };
 
-// Задаём обработчик события keydown (клавиши-стрелки)
-$("body").keydown(function(event) {
-	if (event.keyCode === 32 && playing) {
+// Задаём обработчик события keydown
+const body = document.querySelector('body');
+
+body.addEventListener('keydown', function(event) {
+	if (event.code === "Space" && playing) {
 		continueGame = true;
 		esc = false;
 		gameLoop();
-	} else if (event.keyCode === 27) {
+	} else if (event.code === "Escape") {
 		continueGame = false;
 		esc = true;
 	}
-	let newDirection = directions[event.keyCode];
+	let newDirection = directions[event.code];
 	if (newDirection !== undefined && !esc) {
 		snake.setDirection(newDirection);
 	}
