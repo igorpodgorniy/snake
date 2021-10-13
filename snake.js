@@ -317,12 +317,13 @@ Snake.prototype.move = function() {
 	
 	if (newHead.equal(apple.position)) {
 		score++;
-		if (score !== 20) {
+		if (score !== 3) {
 			animationTime -= 5;
 			apple.move(this.segments);
 		} else {
 			level++;
 			if (level === 5) {
+				setTimeout(win);
 				win();
 			} else {
 				score = 0;
@@ -331,7 +332,7 @@ Snake.prototype.move = function() {
 				setTimeout(newSnakeApple);
 				drawContinue();
 				drawLevelBarrier(level - 1);
-				drawLevelUp();
+				setTimeout(drawLevelUp);
 			}
 		}
 			
@@ -459,9 +460,9 @@ let gameLoop = function() {
 	drawScore();
 	drawLevel();
 	drawLives();
+	apple.draw();
 	snake.move();
 	snake.draw();
-	apple.draw();
 	
 	if (continueGame) {
 		drawLevelBarrier(level);
