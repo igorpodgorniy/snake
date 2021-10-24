@@ -13,10 +13,14 @@
 - `space` (для начала игры)
 
 ## Уровни
-![Уровень №1](https://github.com/igorpodgorniy/snake/raw/main/screenshots/lvl_1.JPG)
-![Уровень №2](https://github.com/igorpodgorniy/snake/raw/main/screenshots/lvl_2.JPG)
-![Уровень №3](https://github.com/igorpodgorniy/snake/raw/main/screenshots/lvl_3.JPG)
-![Уровень №4](https://github.com/igorpodgorniy/snake/raw/main/screenshots/lvl_4.JPG)
+Первый уровень:<br/>
+![Уровень №1](https://github.com/igorpodgorniy/snake/raw/main/screenshots/lvl_1.JPG)<br/>
+Второй уровень:<br/>
+![Уровень №2](https://github.com/igorpodgorniy/snake/raw/main/screenshots/lvl_2.JPG)<br/>
+Третий уровень:<br/>
+![Уровень №3](https://github.com/igorpodgorniy/snake/raw/main/screenshots/lvl_3.JPG)<br/>
+Четвёртый уровень:<br/>
+![Уровень №4](https://github.com/igorpodgorniy/snake/raw/main/screenshots/lvl_4.JPG)<br/>
 
 ## Демо
 ![Демонстрация процесса игры](https://github.com/igorpodgorniy/snake/raw/main/screenshots/snake.gif)
