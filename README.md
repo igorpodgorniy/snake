@@ -26,5 +26,5 @@
 ![Демонстрация процесса игры](https://github.com/igorpodgorniy/snake/raw/main/screenshots/snake.gif)
 
 ## Попробовать
-Можно попробовать сыграть без установки файлов к себе на компьютер.
+Можно попробовать сыграть без установки файлов к себе на компьютер.<br/>
 Ссылка: https://igorpodgorniy.github.io/snake/
